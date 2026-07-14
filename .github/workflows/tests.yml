@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 9 * * *"  # catches upstream breakage even with no commits here
+  workflow_dispatch:
+
+jobs:
+  test-cask:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew style --cask Casks/xenia-edge.rb
+      - run: brew audit --cask --online Casks/xenia-edge.rb
+      - run: brew install --cask Casks/xenia-edge.rb
+      - run: test -d "/Applications/Xenia-edge.app"
+      - run: brew uninstall --cask xenia-edge
