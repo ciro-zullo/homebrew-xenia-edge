@@ -2,9 +2,11 @@ cask "xenia-edge" do
   version :latest
   sha256 :no_check
 
+  depends_on :macos
+
   url "https://github.com/has207/xenia-edge/releases/latest/download/xenia_edge_macos.dmg"
   name "Xenia Edge"
-  desc "Experimental fork of the Xenia Xbox 360 emulator, focused on faster iteration and compatibility"
+  desc "Experimental fork of the Xenia Xbox 360 emulator"
   homepage "https://github.com/has207/xenia-edge"
 
   app "Xenia-edge.app"
