@@ -12,7 +12,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - run: brew tap-new local/test --local
+      - run: brew tap-new local/test
       - run: mkdir -p "$(brew --repository local/test)/Casks"
       - run: cp Casks/xenia-edge.rb "$(brew --repository local/test)/Casks/"
       - run: brew style --cask local/test/xenia-edge
