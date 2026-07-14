@@ -12,8 +12,11 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - run: brew style --cask Casks/xenia-edge.rb
-      - run: brew audit --cask --online Casks/xenia-edge.rb
-      - run: brew install --cask Casks/xenia-edge.rb
+      - run: brew tap-new local/test --local
+      - run: mkdir -p "$(brew --repository local/test)/Casks"
+      - run: cp Casks/xenia-edge.rb "$(brew --repository local/test)/Casks/"
+      - run: brew style --cask local/test/xenia-edge
+      - run: brew audit --cask --online local/test/xenia-edge
+      - run: brew install --cask local/test/xenia-edge
       - run: test -d "/Applications/Xenia-edge.app"
-      - run: brew uninstall --cask xenia-edge
+      - run: brew uninstall --cask local/test/xenia-edge
