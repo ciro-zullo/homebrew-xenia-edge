@@ -1,0 +1,53 @@
+name: Bump xenia-edge
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # check every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get latest upstream release tag
+        id: upstream
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/has207/xenia-edge/releases/latest \
+            | jq -r .tag_name)
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Compare with current cask version
+        id: current
+        run: |
+          current=$(grep -oE 'version "[^"]+"' Casks/xenia-edge.rb | cut -d'"' -f2)
+          echo "current=$current" >> "$GITHUB_OUTPUT"
+
+      - name: Download DMG & hash it
+        if: steps.upstream.outputs.tag != steps.current.outputs.current
+        id: hash
+        run: |
+          curl -fsSL -o d.dmg \
+            "https://github.com/has207/xenia-edge/releases/download/${{ steps.upstream.outputs.tag }}/xenia_edge_macos.dmg"
+          echo "sha=$(sha256sum d.dmg | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+
+      - name: Update cask file
+        if: steps.upstream.outputs.tag != steps.current.outputs.current
+        run: |
+          sed -i "s/version \".*\"/version \"${{ steps.upstream.outputs.tag }}\"/" Casks/xenia-edge.rb
+          sed -i "s/sha256 \".*\"/sha256 \"${{ steps.hash.outputs.sha }}\"/" Casks/xenia-edge.rb
+
+      - name: Commit & push
+        if: steps.upstream.outputs.tag != steps.current.outputs.current
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "xenia-edge: bump to ${{ steps.upstream.outputs.tag }}"
+          git push

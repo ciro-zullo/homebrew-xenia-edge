@@ -1,11 +1,16 @@
 cask "xenia-edge" do
-  version :latest
-  sha256 :no_check
+  version "a75a201"
+  sha256 "636b367d93bfc16d5cdd53b1f755f4a71ea9dfeef1e5ad580757ffdb5897908f"
 
-  url "https://github.com/has207/xenia-edge/releases/latest/download/xenia_edge_macos.dmg"
+  url "https://github.com/has207/xenia-edge/releases/download/#{version}/xenia_edge_macos.dmg"
   name "Xenia Edge"
   desc "Experimental fork of the Xenia Xbox 360 emulator"
   homepage "https://github.com/has207/xenia-edge"
+
+  livecheck do
+    url :url
+    strategy :github_latest
+  end
 
   depends_on macos: :sequoia
 
@@ -17,11 +22,6 @@ cask "xenia-edge" do
       may block it on first launch. If macOS refuses to open it, right-click
       the app in Finder and choose "Open", or run:
         xattr -cr "#{appdir}/Xenia-edge.app"
-
-      This cask always tracks the newest CI build, not a numbered version, so
-      plain `brew upgrade` won't detect updates. Use:
-        brew upgrade --cask --greedy xenia-edge
-      (or `brew reinstall --cask xenia-edge`) to pull the latest build.
     EOS
   end
 end
