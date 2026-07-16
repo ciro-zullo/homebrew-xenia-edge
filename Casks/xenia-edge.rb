@@ -7,7 +7,7 @@ cask "xenia-edge" do
   desc "Experimental fork of the Xenia Xbox 360 emulator"
   homepage "https://github.com/has207/xenia-edge"
 
-  depends_on :macos
+  depends_on macos: :sequoia
 
   app "Xenia-edge.app"
 
