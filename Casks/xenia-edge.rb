@@ -1,6 +1,6 @@
 cask "xenia-edge" do
-  version "e25bfd8"
-  sha256 "8b30738c8316dd878d92751e6b39787fd681afddcba0ec3e2f9180c1c3d1d0ff"
+  version "5c40d34"
+  sha256 "c992be8a4a9987e14185e52ddf8b8de8e1705671eeb52f81d8c0a181919ce80c"
 
   url "https://github.com/has207/xenia-edge/releases/download/#{version}/xenia_edge_macos.dmg"
   name "Xenia Edge"
